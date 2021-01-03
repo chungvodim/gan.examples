@@ -243,4 +243,5 @@ def generate_and_save_images(model, epoch, test_input):
   plt.show()
 
 # Train the model
+checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 train(train_dataset, EPOCHS)
