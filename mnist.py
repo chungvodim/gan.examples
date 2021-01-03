@@ -21,7 +21,7 @@ BATCH_SIZE = 256
 EPOCHS = 50
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
 train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
-train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
+train_images = (train_images - 127.5) / 127.5 # 127.5 = 255/2, Normalize the images to [-1, 1]
 train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(BUFFER_SIZE).batch(BATCH_SIZE) # Batch and shuffle the data
 
 # Build Models
@@ -243,5 +243,24 @@ def generate_and_save_images(model, epoch, test_input):
   plt.show()
 
 # Train the model
-checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 train(train_dataset, EPOCHS)
+checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+
+# Create a GIF
+# Display a single image using the epoch number
+def display_image(epoch_no):
+  return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
+display_image(EPOCHS)
+anim_file = 'dcgan.gif'
+
+with imageio.get_writer(anim_file, mode='I') as writer:
+  filenames = glob.glob('image*.png')
+  filenames = sorted(filenames)
+  for filename in filenames:
+    image = imageio.imread(filename)
+    writer.append_data(image)
+  image = imageio.imread(filename)
+  writer.append_data(image)
+  
+import tensorflow_docs.vis.embed as embed
+embed.embed_file(anim_file)
