@@ -7,6 +7,7 @@
 import tensorflow as tf
 import glob
 import imageio
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -15,6 +16,7 @@ from tensorflow.keras import layers
 import time
 from IPython import display
 
+matplotlib.interactive(True)
 # Prepare dataset
 BUFFER_SIZE = 60000
 BATCH_SIZE = 256
